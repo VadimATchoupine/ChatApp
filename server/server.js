@@ -12,11 +12,24 @@ const app = express()
 const server = http.createServer(app)
 const io = socketIO(server) 
 
+
 app.use(express.static(publicPath))
 
-io.on('connection', () => {
+
+io.on('connection', socket => {
     console.log('IO Connection.')
+
+    socket.on('createMessage', (data) => {
+        console.log(data)
+
+        socket.emit('newMessage', {
+            text: data.value,
+            date: new Date()
+        })
+    })
+    
 }) 
+
 
 server.listen(3000, () => {
     console.log(`Server has been started at port ${port}`)
